@@ -1,0 +1,36 @@
+<head>
+    <title>타이틀</title>
+</head>
+
+<body>
+    <form id="form">
+        <input type="file" name="image">
+    </form>
+    <button onclick="submitImage()">이미지 등록</button>
+</body>
+
+<script>
+    const SERVER_URL = 'http://127.0.0.1:8000'
+
+    // let form = document.getElementById('form');
+    // let imageFormData = new FormData(form); // FormData로 만들면 backend로 전송할 수 있는 형태의 데이터로 변경 된다.
+    // name의 역할? key 값!, FormData도 객체의 한 종류 { image: 파일 }
+
+    const postImage = async function (formData) {
+        let response = await fetch(`${SERVER_URL}/blog/image`, {
+            method: 'post',
+            body: formData,
+        });
+        let data = await response.json();
+        return data;
+    }
+
+    const submitImage = async function () {
+        let form = document.getElementById('form');
+        let imageFormData = new FormData(form); // FormData로 만들면 backend로 전송할 수 있는 형태의 데이터로 변경 된다.
+        let result = await postImage(imageFormData);
+        console.log(result);
+    };
+</script>
+
+</html>
