@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="id" placeholder="email"><br>
+    <input type="text" id="password" placeholder="password"><br>
+    <input type="text" id="name" placeholder="name"><br>
+    <button onclick="submitRegister()">회원가입</button><br>
+    <button onclick="submitLogin()">로그인</button><br>
+</body>
+
+<script>
+    const SERVER_URL = 'http://127.0.0.1:8000'
+
+    async function register(user) {
+        let response = await fetch(`${SERVER_URL}/user/register`, {
+            method: 'post',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        let data = await response.json();
+        return data;
+    }
+
+    async function login(user) {
+        let response = await fetch(`${SERVER_URL}/user/login`, {
+            method: 'post',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        let data = await response.json();
+        return data;
+    }
+
+    async function submitRegister() {
+        let user = {
+            email: document.getElementById('id').value,
+            password: document.getElementById('password').value,
+            fullname: document.getElementById('name').value,
+        }
+        let result = await register(user);
+        console.log(result);
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function setCookie(name, value) {
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + "; path=/";
+        document.cookie = updatedCookie;
+    }
+
+    async function submitLogin() {
+        let user = {
+            email: document.getElementById('id').value,
+            password: document.getElementById('password').value,
+        }
+        let result = await login(user);
+        console.log(result);
+        
+        if (result.access_token) {
+            setCookie('access_token', result.access_token);
+            alert('쿠키에 access token 저장됨!');
+        }
+    }
+</script>
+
+</html>

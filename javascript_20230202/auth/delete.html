@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    // (글 삭제하기) get 요청으로 글 리스트를 받아와서 html 문서에 표시하고, 각 글마다 삭제 버튼이 있어서 삭제 버튼을 누르면 해당 글에 대한 delete 요청이 되도록 구현해보세요.
+    // fetch('https://jsonplaceholder.typicode.com/posts') // fetch는 Promise 객체를 return, 응답이 오기까지 기다려야 함
+
+    async function getPosts() {
+        let response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        let data = await response.json();
+        console.log(`typeof response > ${typeof response}, ${response}`);
+        return data;
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    async function deletePost(id) {
+        let token = getCookie('access_token')
+        let response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+            method: 'delete',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.status
+    }
+
+    async function insertPosts() {
+        let posts = await getPosts();
+        // posts = // [{ id: 1, body: bodycontent, title: title! }, ... , 100개의 글]
+        posts.forEach((post) => {
+            document.body.insertAdjacentHTML('beforeend', `
+                    <div id='${post.id}'</div>
+                        <h1>$post.title}</h1>
+                        <p>%{post.body}</p>
+                        <button onclick='deletePost(${post.id}'>삭제</button>
+                `);
+        });
+    }
+</script>
+
+</html>

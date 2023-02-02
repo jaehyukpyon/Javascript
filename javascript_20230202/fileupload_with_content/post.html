@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="form">
+        <input type="text" name="title" id="title">
+        <input type="text" name="content" id="content">
+        <input type="file" name="image" id="image">
+    </form>
+    <button onclick="submitArticle()">작성하기</button>s
+</body>
+
+<script>
+    // const SERVER_URL = 'http://127.0.0.1:8000'
+
+    // const postArticle = async function (article) {
+    //     let response = await fetch(`${SERVER_URL}/blog/article`, {
+    //         method: 'post',
+    //         body: article,
+    //     });
+    //     let data = await response.json();
+    //     return data;
+    // }
+
+    // const submitArticle = async function () {
+    //     let form = document.getElementById('form');
+    //     let formData = new FormData(form);
+    //     let result = await postArticle(form);
+    //     console.log(result);
+    // }
+
+    const SERVER_URL = "http://127.0.0.1:8000"
+
+    async function postArticle(article) {
+        let response = await fetch(`${SERVER_URL}/blog/article`, {
+            method: 'POST',
+            body: article
+        })
+        let data = await response.json();
+        return data
+    }
+
+    async function submitArticle() {
+        let form = document.getElementById('form')
+        let formData = new FormData(form);
+        let result = await postArticle(formData);
+        console.log(result);
+    }
+</script>
+
+</html>
