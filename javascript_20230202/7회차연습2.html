@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <button onclick="insertIntoDivTag()">글 리스트 불러오기</button>
+    <br>
+    <hr>
+    <div>
+        <input type="text" id="title">
+        <input type="text" id="content">
+    </div>
+    <button onclick="submitPost(event)">수정하기</button>
+</head>
+
+<body>
+    <script>
+        const SERVER_URL = 'http://127.0.0.1:8000';
+
+        const getPost = async function (id) {
+            let response = await fetch(`${SERVER_URL}/blog/article/${id}`);
+            let data = await response.json();
+            console.log('data >> ', data);
+            return data;
+        };
+
+        const insertPost = async function (id) {
+            let data = await getPost(id);
+            let title = document.getElementById('title');
+            let content = document.getElementById('content');
+
+            title.value = data.title;
+            content.value = data.content;
+
+            title.parentElement.id = id;
+        }
+
+        const submitPost = async function (event) {
+            let id = event.target.previousElementSibling.id;
+            let post = {
+                title: document.getElementById('id').value,
+                content: document.getElementById('content').value,
+            }
+
+            let result = await updatePost(post, id);
+        }
+
+        const updatePost = async function (post, id) {
+            let response = await fetch(`${SERVER_URL}/blog/article/${id}`, {
+                method: 'put',
+                body: JSON.stringify(post),
+                headers: {
+                    'Content-type': 'application/json',
+                },
+            })
+            let data = await response.json();
+            return data;
+        }
+    </script>
+</body>
+
+</html>

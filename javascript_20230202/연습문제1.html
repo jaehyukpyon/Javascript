@@ -32,7 +32,7 @@
             let posts = await getPosts();
             // posts = // [{ id: 1, body: bodycontent, title: title! }, ... , 100개의 글]
             posts.forEach((post) => {
-                document.body.insertAdjacentElement('BeforeEnd', `
+                document.body.insertAdjacentHTML('beforeend', `
                     <div id='${post.id}'</div>
                         <h1>$post.title}</h1>
                         <p>%{post.body}</p>

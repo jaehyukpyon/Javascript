@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <button onclick="insertIntoDivTag()">글 리스트 불러오기</button>
+    <br>
+    <hr>
+    <div id="lists">
+        <!-- <div>
+            <input type="text" id="id">
+            <h3 id="title"></h3>
+            <span id="content"></span>
+        </div> -->
+    </div>
+</head>
+
+<body>
+    <script>
+        // 1. (글 삭제하기) get 요청으로 글 리스트를 받아와서 html 문서에 표시하고, 
+        // 각 글마다 삭제 버튼이 있어서 삭제 버튼을 누르면 해당 글에 대한 delete 요청이 되도록 구현해보세요.
+
+        const SERVER_URL = 'http://127.0.0.1:8000';
+
+        const getArticleList = async function () {
+            let response = await fetch(`${SERVER_URL}/blog/article`);
+            let list = response.json();
+            return list;
+        };
+
+        const insertIntoDivTag = async function () {
+            document.getElementById('lists').innerHTML = '';
+
+            let list = await getArticleList();
+            console.log('list >> ', list);
+
+            list.forEach((article) => {
+                document.getElementById('lists')
+                    .insertAdjacentHTML('beforeend', `
+                    <div>
+                        <input type="text" id="id" value='${article.id}'>
+                        <h3 id="title">${article.title}</h3>
+                        <span id="content">${article.content}</span><button onclick='deleteArticle(${article.id})'>삭제하기</button>
+                    </div><br><br>                    
+                    `);
+            });
+        }
+
+        const deleteArticle = async function (id) {
+            const result = await fetch(`${SERVER_URL}/blog/article/${id}`, {
+                method: 'delete',
+            });
+            console.log('result.status >> ', result.status); // 204
+            console.log('typeof result.status >> ', typeof result.status); // number
+
+            if (result.status === 204) {
+                alert('Article 삭제 완료.');
+                insertIntoDivTag();
+            } else {
+                alert('Article 삭제 오류.');
+            }
+        }
+    </script>
+</body>
+
+</html>
